@@ -11,7 +11,7 @@ def gerar_relatorio_pdf(df, pasta_saida):
     pasta_saida = os.path.join(BASE_DIR, pasta_saida)
     
     os.makedirs(pasta_saida, exist_ok=True)
-
+    arquivos_gerados = []
     for _, linha in df.iterrows():
         nome = linha["Nome"]
         departamento = linha["Departamento"]
@@ -34,3 +34,5 @@ def gerar_relatorio_pdf(df, pasta_saida):
         documento.drawString(100, 700 - 4 * distancia, "Relatório gerado automaticamente via Python")
 
         documento.save()
+        arquivos_gerados.append(documento_pdf)
+    return arquivos_gerados
