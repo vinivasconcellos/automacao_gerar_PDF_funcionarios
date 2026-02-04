@@ -1,30 +1,30 @@
 #com Outlook COM, local e funciona bem pra automação. Ainda teria uma com Cloud para produção que é melhor ainda
-import logging
-import win32com.client as win32
-import os
+# import logging
+# import win32com.client as win32
+# import os
 
-def enviar_email(destinatario, assunto, corpo, anexo_path):
-    try:
-        logging.info("Iniciando envio de email via Outlook")
+# def enviar_email(destinatario, assunto, corpo, anexo_path):
+#     try:
+#         logging.info("Iniciando envio de email via Outlook")
         
-        if not os.path.exists(anexo_path):
-            raise FileNotFoundError(f"Anexo não encontrado: {anexo_path}")
+#         if not os.path.exists(anexo_path):
+#             raise FileNotFoundError(f"Anexo não encontrado: {anexo_path}")
 
-        outlook = win32.Dispatch("Outlook.Application")
-        mail = outlook.CreateItem(0)
+#         outlook = win32.Dispatch("Outlook.Application")
+#         mail = outlook.CreateItem(0)
 
-        mail.To = destinatario
-        mail.Subject = assunto
-        mail.Body = corpo
-        mail.Attachments.Add(os.path.abspath(anexo_path))
+#         mail.To = destinatario
+#         mail.Subject = assunto
+#         mail.Body = corpo
+#         mail.Attachments.Add(os.path.abspath(anexo_path))
 
-        mail.Send()
+#         mail.Send()
 
-        logging.info("Email enviado com sucesso via Outlook")
+#         logging.info("Email enviado com sucesso via Outlook")
 
-    except Exception:
-        logging.error("Erro ao enviar email via Outlook", exc_info=True)
-        raise
+#     except Exception:
+#         logging.error("Erro ao enviar email via Outlook", exc_info=True)
+#         raise
 
 
 # #SMTP but unusual, because block security, expo credentials, not really used on the market  
