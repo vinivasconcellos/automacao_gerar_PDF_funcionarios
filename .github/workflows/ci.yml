@@ -1,17 +1,15 @@
-name: CI - Python Tests
+name: CI - Automacao Python
 
 on:
-  #push:
-  #  branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  tests:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do código
+      - name: Checkout do codigo
         uses: actions/checkout@v4
 
       - name: Configurar Python
@@ -19,11 +17,59 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Instalar dependências
+      - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Rodar testes
+      - name: Rodar testes (pytest)
         run: |
           pytest
+
+      - name: Upload logs como artefato
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-execucao
+          path: logs/execucao.log
+
+      - name: Upload PDFs e ZIP
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-gerados
+          path: |
+            outputs/**/*.pdf
+            outputs/**/*.zip
+
+
+
+# name: CI - Python Tests
+
+# on:
+#   #push:
+#   #  branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
+
+# jobs:
+#   tests:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout do código
+#         uses: actions/checkout@v4
+
+#       - name: Configurar Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: "3.13"
+
+#       - name: Instalar dependências
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+
+#       - name: Rodar testes
+#         run: |
+#           pytest
