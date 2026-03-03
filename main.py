@@ -7,30 +7,44 @@ from gerar_pdf import gerar_relatorio_pdf
 from validar_dados import validando_dados
 from logger import configurar_logger
 from zip_service import gerar_zip
-from email_service import enviar_email
+#from email_service import enviar_email
+from meses_processados import carregar_meses_processados, salvar_mes_processado
+from limpar_dados import extrair_ano_mes
 
 # carregar dados
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-csv_path = os.path.join(BASE_DIR, "horas_extras.csv")
+csv_path = os.path.join(BASE_DIR, "horas_extras_03.csv")
 df_tabela = pd.read_csv(csv_path)
 
 # logging
 configurar_logger()
-logging.info("Inicio da geracao de relatorios")
+logging.info("Start generate the report")
 
 # validar dados/testar
 validando_dados(df_tabela)
 
-# gerar relatórios pdfs
-lista_pdfs = gerar_relatorio_pdf(df_tabela, pasta_saida="outputs/pdfs")
+meses = df_tabela["Referência"].unique()
+meses_processados = carregar_meses_processados()
 
-# gerar zip
-zip_path = gerar_zip(lista_pdfs, "outputs/relatorios.zip")
-#print(f"ZIP gerado com sucesso em: {zip_path}")
+for referencia in meses:
+    ano, mes = extrair_ano_mes(referencia)
+    chave = f"{ano}-{mes}"
 
-#enviar email
-# enviar_email(
-#     destinatario="empresa@hotmail.com",
-#     assunto="Relatórios de Horas Extras",
-#     corpo="Segue em anexo os relatórios gerados automaticamente.",
-#     anexo_path=zip_path)
+    if chave in meses_processados:
+        continue
+    
+    df_mes = df_tabela[df_tabela["Referência"] == referencia]
+
+    pasta_pdf = f"outputs/pdfs/{ano}/{mes}"
+    # gerar relatórios pdfs
+    lista_pdfs = gerar_relatorio_pdf(df_mes, pasta_saida=pasta_pdf)
+    # gerar zip
+    zip_path = gerar_zip(lista_pdfs, f"outputs/zips/{ano}/{mes}.zip")
+    
+    # enviar_email(
+    #             destinatario="empresa@hotmail.com",
+    #             assunto=f"Relatórios {referencia}",
+    #             corpo="Relatórios automáticos em anexo",
+    #             anexo_path=zip_path)
+    
+    salvar_mes_processado(chave)
