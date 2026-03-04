@@ -1,8 +1,15 @@
 name: CI - Automacao Python
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+
+# on:
+#   pull_request:
+#     branches: [ "main" ]
 
 jobs:
   test:
