@@ -13,7 +13,7 @@ from limpar_dados import extrair_ano_mes
 
 # carregar dados
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-csv_path = os.path.join(BASE_DIR, "horas_extras_03.csv")
+csv_path = os.path.join(BASE_DIR, "horas_extras.csv")
 df_tabela = pd.read_csv(csv_path)
 
 # logging
